@@ -6,7 +6,7 @@ UartController::UartController(QObject *parent) : QObject{parent}, m_portName("C
 {
     port = new QSerialPort();
     m_idleTimer = new QTimer(this);
-    m_idleTimer->setSingleShot(true);          // однократный таймер
+    m_idleTimer->setSingleShot(true);
     m_idleTimer->setInterval(1000);
 
     connect(port, &QSerialPort::readyRead, this, &UartController::SlotRead);
@@ -31,22 +31,11 @@ UartController::~UartController()
     delete port;
 }
 
+// Читаем все доступные байты и добавляем в буфер
 void UartController::SlotRead()
 {
-    // Читаем все доступные байты и добавляем в буфер
         m_buffer.append(port->readAll());
-
-        // Каждый пришедший байт перезапускает таймер простоя
         m_idleTimer->start();
-    /*
-    QByteArray received = port->read(receiveMessageSize);
-    if (received.size() == 2)
-    {
-        int x = static_cast<int>(static_cast<unsigned char>(received[0]));
-        int y = static_cast<int>(static_cast<unsigned char>(received[1]));
-        emit SendDataToScreen(x, y);
-    }
-    received.clear();*/
 }
 
 
@@ -84,7 +73,6 @@ void UartController::SlotInit()
     }
 }
 
-
 void UartController::SlotClosePort()
 {
     port->close();
@@ -106,27 +94,3 @@ void UartController::SetPortName(const QString &name)
 {
     m_portName = name;
 }
-
-
-/*void UartController::SendData(QByteArray &byteArray, int length)
-{
-    if (!port->isOpen())
-    {
-        qDebug() << "Порт не открыт!";
-        return;
-    }
-    if (byteArray.length() == length)
-    {
-        for (int i = 0; i<length; i++)
-        {
-            QByteArray temp;
-            temp.resize(0);
-            temp.append(byteArray[i]);
-            port->write(temp);
-            port->flush();
-            //port->waitForBytesWritten();//waitForBytesWritten блокирует поток и readyRead всё крашит
-            temp.clear();
-        }
-        byteArray.clear();
-    }
-}*/
