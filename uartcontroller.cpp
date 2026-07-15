@@ -50,11 +50,14 @@ void UartController::FlushBuffer()
 
     // Сохраняем в текущей рабочей папке (для QtCreator — это папка проекта)
     QFile file(fileName);
-    if (file.open(QIODevice::WriteOnly)) {
+    if (file.open(QIODevice::WriteOnly))
+    {
         file.write(m_buffer);
         file.close();
         qDebug() << "Сохранено" << m_buffer.size() << "байт в" << fileName;
-    } else {
+    }
+    else
+    {
         qDebug() << "Ошибка сохранения файла:" << file.errorString();
     }
 
